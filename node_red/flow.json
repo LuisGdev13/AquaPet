@@ -1,0 +1,250 @@
+[
+    {
+        "id": "ef9c0896fd9233b1",
+        "type": "tab",
+        "label": "Flow 2",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "13b17ec5985d606c",
+        "type": "mqtt in",
+        "z": "ef9c0896fd9233b1",
+        "name": "MQTT Sensor",
+        "topic": "#",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "5f27f00beb160dde",
+        "nl": false,
+        "rap": false,
+        "inputs": 0,
+        "x": 420,
+        "y": 1000,
+        "wires": [
+            [
+                "97a3970df10e8d3c"
+            ]
+        ]
+    },
+    {
+        "id": "97a3970df10e8d3c",
+        "type": "switch",
+        "z": "ef9c0896fd9233b1",
+        "name": "Reconhecer sensor",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "maquina1/distancia",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 650,
+        "y": 1025,
+        "wires": [
+            [
+                "0cf01b12decec360"
+            ]
+        ]
+    },
+    {
+        "id": "0cf01b12decec360",
+        "type": "function",
+        "z": "ef9c0896fd9233b1",
+        "name": "Converter Distância",
+        "func": "msg.payload = Number(msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 920,
+        "y": 1050,
+        "wires": [
+            [
+                "a156b438896125ec",
+                "e6b4ec2e0390eb38",
+                "33b49da970100c57"
+            ]
+        ]
+    },
+    {
+        "id": "a156b438896125ec",
+        "type": "ui_gauge",
+        "z": "ef9c0896fd9233b1",
+        "name": "Ultrassonico",
+        "group": "6e384fa0b33fe6e9",
+        "order": 1,
+        "width": 6,
+        "height": 6,
+        "gtype": "gage",
+        "title": "% do nivel de agua",
+        "label": "Cm",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "400",
+        "colors": [
+            "#cc0000",
+            "#e6e600",
+            "#1cbc1a"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 1205,
+        "y": 1075,
+        "wires": []
+    },
+    {
+        "id": "80458e58d7fcbb33",
+        "type": "ui_text",
+        "z": "ef9c0896fd9233b1",
+        "group": "6e384fa0b33fe6e9",
+        "order": 2,
+        "width": 6,
+        "height": 6,
+        "name": "Status",
+        "label": "Status do Pet",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1300,
+        "y": 1175,
+        "wires": []
+    },
+    {
+        "id": "e6b4ec2e0390eb38",
+        "type": "function",
+        "z": "ef9c0896fd9233b1",
+        "name": "Alerta",
+        "func": "let nivel = parseFloat(msg.payload);\n\nif (nivel >= 300) {\n    msg.payload = \"Hidratação Normal\";\n}\nelse if (nivel >= 150) {\n    msg.payload = \"Atenção: consumo moderado\";\n}\nelse {\n    msg.payload = \"ALERTA: hidratação crítica\";\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1105,
+        "y": 1175,
+        "wires": [
+            [
+                "80458e58d7fcbb33"
+            ]
+        ]
+    },
+    {
+        "id": "33b49da970100c57",
+        "type": "ui_chart",
+        "z": "ef9c0896fd9233b1",
+        "name": "",
+        "group": "6e384fa0b33fe6e9",
+        "order": 2,
+        "width": "6",
+        "height": "6",
+        "label": "Consumo de agua",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "400",
+        "removeOlder": "3",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1265,
+        "y": 975,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5f27f00beb160dde",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "f64abd18f054459c90566f33281430b0.s1.eu.hivemq.cloud",
+        "port": "8883",
+        "tls": "",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": true,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "6e384fa0b33fe6e9",
+        "type": "ui_group",
+        "name": "Dispositivo ",
+        "tab": "6b3247a1eff541b3",
+        "order": 1,
+        "disp": true,
+        "width": 18,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "6b3247a1eff541b3",
+        "type": "ui_tab",
+        "name": "                    Medidor de agua",
+        "icon": "dashboard",
+        "order": 2,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "e2ef8dca03f81910",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-dashboard": "3.6.6"
+        }
+    }
+]
