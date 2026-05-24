@@ -207,7 +207,3 @@ O sistema já é capaz de:
 Adicionar link do vídeo no YouTube aqui.
 
 ---
-
-# 🔗 Repositório
-
-Adicionar link do GitHub aqui.
